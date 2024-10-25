@@ -1,0 +1,433 @@
+#include <iostream>
+using namespace std;
+
+class staff {
+private:
+	string place;
+	double salary;
+	int staff_id;
+	staff* staffnext;
+	staff* staffprevious;
+
+public:
+	//constructer
+	staff(string place, double salary, int staff_id) {
+		this->place = place;
+		this->salary = salary;
+		this->staff_id = staff_id;
+		this->staffnext = NULL;
+		this->staffprevious = NULL;
+	}
+	//getter\setter
+	string getPlace() {
+		return place;
+	}
+	void setPlace(string place) {
+		this->place = place;
+	}
+	double getSalary() {
+		return salary;
+	}
+	void setSalary(double salary) {
+		this->salary = salary;
+	}
+	int getStaff_id() {
+		return staff_id;
+	}
+	void setStaff_id(int staff_id) {
+		this->staff_id = staff_id;
+	}
+	staff* getStaffnext() {
+		return staffnext;
+	}
+	void setStaffnext(staff* staffnext) {
+		this->staffnext = staffnext;
+	}
+	staff* getStaffprevious() {
+		return staffprevious;
+	}
+	void setStaffprevious(staff* staffprevious) {
+		this->staffprevious = staffprevious;
+	}
+};
+class participant {
+private:
+	string name;
+	int id;
+	participant* partnext;
+	participant* partprevious;
+public:
+	//constructer
+	participant(string name, int id) {
+		this->name = name;
+		this->id = id;
+		this->partnext = NULL;
+		this->partprevious = NULL;
+
+	}
+	//getter\setter
+	string getName() {
+		return name;
+	}
+	void setName(string name) {
+		this->name = name;
+	}
+	int getId() {
+		return id;
+	}
+	void setId(int id) {
+		this->id = id;
+	}
+	participant* getPartnext() {
+		return  partnext;
+	}
+	void setPartnext(participant* partnext) {
+		this->partnext = partnext;
+	}
+	participant* getPartprevious() {
+		return partprevious;
+	}
+	void setPartprevious(participant* partprevious) {
+		this->partprevious = partprevious;
+	}
+};
+class teamleader {
+private:
+	string name;
+	string location;
+	double capacity;
+	teamleader* teamleadernext;
+	teamleader* teamleaderprevious;
+	//constructer
+public:
+	teamleader(string name, string location, double capacity) {
+		this->name = name;
+		this->location = location;
+		this->capacity = capacity;
+		this->teamleadernext = NULL;
+		this->teamleaderprevious = NULL;
+	}
+	//getter\setter
+	string getName() {
+		return name;
+	}
+	void setName(string name) {
+		this->name = name;
+	}
+	string getLocation() {
+		return location;
+	}
+	void setLocation(string location) {
+		this->location = location;
+	}
+	double getCapacity() {
+		return capacity;
+	}
+	void setCapacity(double capacity) {
+		this->capacity = capacity;
+	}
+	teamleader* getTeamleadernext() {
+		return teamleadernext;
+	}
+	void setTeamleadernext(teamleader* teamleadernext) {
+		this->teamleadernext = teamleadernext;
+	}
+	teamleader* getTeamleaderprevious() {
+		return teamleaderprevious;
+	}
+	void setTeamleaderprevious(teamleader* teamleaderprevious) {
+		this->teamleaderprevious = teamleaderprevious;
+	}
+};
+class applying {
+private:
+	participant* parthead;
+	staff* staffhead;
+	teamleader* teamleaderhead;
+public:
+	applying() {
+		this->parthead = NULL;
+		this->staffhead = NULL;
+		this->teamleaderhead = NULL;
+	}
+	//applying participant class
+	void addAtParticipantHead() {
+		string name;
+		int id;
+
+		cout << "Enter Name";
+		cin >> name;
+		cout << "Enter id";
+		cin >> id;
+
+		participant* Newparti = new participant(name, id);
+		Newparti->setPartnext(parthead);
+		if (parthead != NULL) {
+			parthead->setPartprevious(Newparti);
+		}
+		parthead = Newparti;
+	}
+	void addAtParticipantTail() {
+		if (parthead == NULL) {
+			addAtParticipantHead();
+			return;
+		}
+		string name;
+		int id;
+		cout << "Enter Name";
+		cin >> name;
+		cout << "Enter id";
+		cin >> id;
+
+		participant* Newparti = new participant(name, id);
+		participant* temp = parthead;
+		while (temp->getPartnext() != NULL) {
+			temp = temp->getPartnext();
+		}
+		temp->setPartnext(Newparti);
+		Newparti->setPartprevious(temp);
+	}
+	void deleteparti() {
+		if (parthead == NULL) {
+			cout << "no participant to remove" << endl;
+			return;
+		}
+		int id;
+		cout << "enter id you want to remove";
+		cin >> id;
+		participant* temp = parthead;
+		while (temp != NULL && temp->getId() != id) {
+			temp = temp->getPartnext();
+		}
+		if (temp == NULL) {
+			cout << "no participant is here" << endl;
+			return;
+		}
+		if (temp == parthead) {
+			parthead = temp->getPartnext();
+			if (parthead != NULL) {
+				parthead->setPartprevious(NULL);
+			}
+		}
+		else if (temp->getPartprevious()) {
+			temp->getPartprevious()->setPartnext(temp->getPartnext());
+		}
+		else if (temp->getPartnext()) {
+			temp->getPartnext()->setPartprevious(temp->getPartprevious());
+		}
+		delete temp;
+		cout << "participant deleted sucessfully" << endl;
+	}
+	void displayParticipant() {
+		if (parthead == NULL) {
+			cout << "no participant available" << endl;
+			return;
+		}
+		participant* temp = parthead;
+		while (temp != NULL) {
+			cout << "Participant Name" << temp->getName() << endl;
+			cout << "ID" << temp->getId() << endl;
+			temp = temp->getPartnext();
+
+		}
+	}
+	//staff class applying
+	void staffAppointments() {
+		if (parthead == NULL) {
+			cout << "No participant available for appointment" << endl;
+			return;
+		}
+		int id;
+		cout << "Enter participant id:";
+		cin >> id;
+
+		participant* temp = parthead;
+		while (temp != NULL && temp->getId() != id) {
+			temp = temp->getPartnext();
+		}
+		if (temp == NULL) {
+			cout << "Participant not found" << endl;
+			return;
+		}
+		string place;
+		double salary;
+		int staff_id;
+
+		cout << "Enter palce:";
+		cin >> place;
+		cout << "Enter salary:";
+		cin >> salary;
+		cout << "Enter staff id:";
+		cin >> staff_id;
+
+		staff* newstaff = new staff(place, salary, staff_id);
+		newstaff->setStaffnext(staffhead);
+
+		if (staffhead != NULL) {
+			staffhead->setStaffprevious(newstaff);
+		}
+		staffhead = newstaff;
+		cout << "participant id" << id << "is now appointed as staff" << endl;
+
+	}
+	void displaystaff() {
+		if (staffhead == NULL) {
+			cout << "no staff avaiable" << endl;
+			return;
+		}
+		staff* temp = staffhead;
+		while (temp != NULL) {
+			cout << "staff place" << temp->getPlace() << endl;
+			cout << "salary:" << temp->getSalary() << endl;
+			cout << "staff ID" << temp->getStaff_id() << endl;
+			temp = temp->getStaffnext();
+		}
+	}
+	//team leader class applying
+	void addAtTeamLeaderHead() {
+		string name;
+		string location;
+		double capacity;
+
+		cout << "Enter name:";
+		cin >> name;
+		cout << "Enter location:";
+		cin >> location;
+		cout << "Enter capacity:";
+		cin >> capacity;
+
+		teamleader* Newteamleader = new teamleader(name, location, capacity);
+		Newteamleader->setTeamleadernext(teamleaderhead);
+		if (teamleaderhead != NULL) {
+			teamleaderhead->setTeamleaderprevious(Newteamleader);
+		}
+		teamleaderhead = Newteamleader;
+	}
+	void AddAtTeamLederTail() {
+		if (teamleaderhead == NULL) {
+			addAtTeamLeaderHead();
+			return;
+		}
+		string name;
+		string location;
+		double capacity;
+
+		cout << "Enter name:";
+		cin >> name;
+		cout << "Enter location:";
+		cin >> location;
+		cout << "Enter capacity:";
+		cin >> capacity;
+
+		teamleader* Newteamleader = new teamleader(name, location, capacity);
+		teamleader* temp = teamleaderhead;
+
+		while (temp->getTeamleadernext() != NULL) {
+			temp = temp->getTeamleadernext();
+		}
+		temp->setTeamleadernext(Newteamleader);
+		Newteamleader->setTeamleaderprevious(temp);
+	}
+	void displayTeamleader() {
+		if (teamleaderhead == NULL) {
+			cout << "no leader avaiable" << endl;
+			return;
+		}
+		teamleader* temp = teamleaderhead;
+		while (temp != NULL) {
+			cout << "Team leader name:" << temp->getName() << endl;
+			cout << "Location:" << temp->getLocation() << endl;
+			cout << "Capacity:" << temp->getCapacity() << endl;
+			temp = temp->getTeamleadernext();
+		}
+	}
+};
+int main() {
+	applying app;
+	int choice;
+	do {
+		cout << "^^^^Organization Mangament System^^^^" << endl;
+		cout << "Press 1 for staff" << endl;
+		cout << "Press 2 for team leader" << endl;
+		cout << "press 3 for participant" << endl;
+
+		cout << "Enter your choice" << endl;
+		cin >> choice;
+
+		switch (choice) {
+		case 1:
+			do {
+				cout << "      staff Managment    " << endl;
+				cout << "Press 1 for apponting staff" << endl;
+				cout << "Press 2 for display all staff member" << endl;
+				cout << "Press 3 for return to the main menu" << endl;
+
+				cout << "Enter your choice" << endl;
+				cin >> choice;
+
+				switch (choice) {
+				case 1:
+					app.staffAppointments();
+					break;
+				case 2:
+					app.displaystaff();
+					break;
+				case 3:
+					break;
+				}
+			} while (choice != 3);
+			break;
+		case 2:
+			do {
+				int choice;
+				cout << "       Team Leader Managment       " << endl;
+				cout << "Press 1 for select team leader" << endl;
+				cout << "Press 2 for display all our team leader" << endl;
+				cout << "Press 3 for return to the main menu" << endl;
+
+				cout << "Enter your choice" << endl;
+				cin >> choice;
+
+				switch (choice) {
+				case 1:
+					app.AddAtTeamLederTail();
+					break;
+				case 2:
+					app.displayTeamleader();
+					break;
+				case 3:
+					break;
+				}
+			} while (choice != 3);
+			break;
+		case 3:
+			do {
+				int choice;
+				cout << "          Participant Managment          " << endl;
+				cout << "Press 1 for add participant " << endl;
+				cout << "press 2 for remove participant" << endl;
+				cout << "press 3 for display all participant" << endl;
+				cout << "press 4 for return to the main menu" << endl;
+
+				cout << "Enter your choice" << endl;
+				cin >> choice;
+
+				switch (choice) {
+				case 1:
+					app.addAtParticipantHead();
+					break;
+				case 2:
+					app.deleteparti();
+					break;
+				case 3:
+					app.displayParticipant();
+					break;
+				case 4:
+					break;
+				}
+			} while (choice != 4);
+			break;
+		}
+	} while (true);
+	return 0;
+}
